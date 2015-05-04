@@ -55,7 +55,7 @@ class Migration_Install_blog extends Migration
 	public function up()
 	{
 		$this->dbforge->add_field($this->fields);
-		$this->dbforge->add_key('id', true);
+		$this->dbforge->add_key('post_id', true);
 		$this->dbforge->create_table($this->table_name);
 	}
 
