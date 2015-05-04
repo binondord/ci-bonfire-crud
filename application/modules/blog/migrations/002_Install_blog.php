@@ -11,11 +11,40 @@ class Migration_Install_blog extends Migration
 	 * @var array The table's fields
 	 */
 	private $fields = array(
-		'id' => array(
-			'type'       => 'INT',
-			'constraint' => 11,
-			'auto_increment' => true,
-		),
+		'post_id' => array(
+                    'type'           => 'bigint',
+                    'constraint'     => 20,
+                    'unsigned'       => true,
+                    'auto_increment' => true,
+                ),
+                'title' => array(
+                    'type'       => 'varchar',
+                    'constraint' => 255,
+                    'null'       => false,
+                ),
+                'slug' => array(
+                    'type'       => 'varchar',
+                    'constraint' => 255,
+                    'null'       => false,
+                ),
+                'body' => array(
+                    'type' => 'text',
+                    'null' => true,
+                ),
+                'created_on' => array(
+                    'type' => 'datetime',
+                    'null' => false,
+                ),
+                'modified_on' => array(
+                    'type' => 'datetime',
+                    'null' => false,
+                ),
+                'deleted' => array(
+                    'type' => 'tinyint',
+                    'constraint' => 1,
+                    'null' => false,
+                    'default' => 0,
+                ),
 	);
 
 	/**
@@ -38,5 +67,20 @@ class Migration_Install_blog extends Migration
 	public function down()
 	{
 		$this->dbforge->drop_table($this->table_name);
+                
+                // Remove the permissions.
+                $this->load->model('roles/role_permission_model');
+                $this->load->model('permissions/permission_model');
+
+                $permissionKey = $this->permission_model->get_key();
+                foreach ($this->permissionValues as $permissionValue) {
+                    $permission = $this->permission_model->select($permissionKey)
+                                                         ->find_by('name', $permissionValue['name']);
+                    if ($permission) {
+                        // permission_model's delete method calls the role_permission_model's
+                        // delete_for_permission method.
+                        $this->permission_model->delete($permission->{$permissionKey});
+                    }
+                }
 	}
 }
