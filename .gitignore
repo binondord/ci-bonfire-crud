@@ -38,11 +38,11 @@ application/config/installed.txt
 !application/config/production/index.html
 
 # Helping GUIs omiting subtree repos
-bonfire/modules/**/.git/*
-bonfire/modules/**/.hg/*
+#bonfire/modules/**/.git/*
+#bonfire/modules/**/.hg/*
 #application/modules/**/.git/*
 #application/modules/**/.hg/*
-!application/modules/index.html
+#!application/modules/index.html
 
 
 # Ignore all custom modules.
